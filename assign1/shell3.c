@@ -13,14 +13,14 @@
 
 int main (int argc, char *argv[]){
   char linebuffer[LINE_LENGTH];
-  bool logout = true;
+  bool logout = false;
   bool foreground = true;
   char **p_argv = NULL;
 
   int count = 0;
   int c;
   pid_t pid;
-  while(logout){
+  while(!logout){
     printf(PROMPT);
     count =0;
     while(1){
@@ -51,7 +51,10 @@ int main (int argc, char *argv[]){
       foreground = false;
       linebuffer[strlen(linebuffer) -1 ] = '\0';
     }
-
+    if(!strcmp(linebuffer, "logout")){
+      logout=true;
+      continue;
+    }
     if((pid= fork()) ==0){
       execv(linebuffer, p_argv);
 
@@ -61,5 +64,6 @@ int main (int argc, char *argv[]){
 
     }
   }
+  printf("end the shell \n");
 
 }
