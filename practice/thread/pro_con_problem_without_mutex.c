@@ -11,16 +11,16 @@ pthread_cond_t buffer_has_data = PTHREAD_COND_INITIALIZER;
 void producer(void){
   int i;
   for(i=0 ; i<1000 ; i++){
-    pthread_mutex_lock(&mutex);
+//    pthread_mutex_lock(&mutex);
     if(count==100)
-      pthread_cond_wait(&buffer_has_space, &mutex);
+    //  pthread_cond_wait(&buffer_has_space, &mutex);
 
     in++;
     in%=100;
     buffer[in] = i;
     count++;
-    pthread_cond_signal(&buffer_has_data);
-    pthread_mutex_unlock(&mutex);
+   // pthread_cond_signal(&buffer_has_data);
+   // pthread_mutex_unlock(&mutex);
   }
 }
 
@@ -28,16 +28,16 @@ void consumer(void)
 {
   int i, data;
   for(i=0; i<1000; i++){
-    pthread_mutex_lock(&mutex);
+    //pthread_mutex_lock(&mutex);
     if (count ==0)
-      pthread_cond_wait(&buffer_has_data, &mutex);
+      //pthread_cond_wait(&buffer_has_data, &mutex);
 
     out++;
     out %= 100;
     data = buffer[out];
     count--;
-    pthread_cond_signal(&buffer_has_space);
-    pthread_mutex_unlock(&mutex);
+    //pthread_cond_signal(&buffer_has_space);
+    //pthread_mutex_unlock(&mutex);
     printf("data = %d\n", data);
   }
 }
