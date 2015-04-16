@@ -51,6 +51,8 @@ int main (int argc, char *argv[]){
       foreground = false;
       linebuffer[strlen(linebuffer) -1 ] = '\0';
     }
+    else
+      foreground = true;
     if(!strcmp(linebuffer, "logout")){
       logout=true;
       continue;
@@ -61,7 +63,7 @@ int main (int argc, char *argv[]){
     }
     if(foreground){
       while(pid!=wait(0));
-
+      
     }
   }
   printf("end the shell \n");

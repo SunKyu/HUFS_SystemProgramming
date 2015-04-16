@@ -3,7 +3,7 @@
 using namespace std;
 
 int main (int argc, char * argv[]){
-  int i = 0;
-  cin>>i;
-  cout<<"Hello world  : "<<i<<endl;
+  cout<<"child process"<<endl;
+  cout<<"Hello world! "<<endl;
+  exit(1);
 }
