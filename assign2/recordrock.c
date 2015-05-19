@@ -70,6 +70,19 @@ int main (int argc, char * argv[]){
         write(fd, &current, sizeof(struct record));
         reclock(fd, record_no, sizeof(struct record), F_UNLCK);
         break;
+      case 'w':
+        reclock(fd, reclock_no, sizeof(struct record), F_WRLCK);
+        pos = record_no*sizeof(struct record);
+        lseek(fd, pos, SEEK_SET);
+        n = read(fd, &current, sizeof(struct record));
+        display(&current);
+        printf("enter amount to withdraw\n");
+        scanf ("%d%*c, &amount");
+        current.balance -=amount;
+        lseek(fd, pos, SEEK_SET);
+        write(fd, &current, sizeof(struct record));
+        reclock(fd, reclock_no, sizeof(struct reclock_no), F_UNLCK);
+        break;
       default:
         printf("ilegal input \n");
         continue;
