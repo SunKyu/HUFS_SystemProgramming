@@ -7,7 +7,6 @@
 
 struct record{
   int id;
-  char name[20];
   int balance;
 };
 
@@ -28,7 +27,6 @@ int reclock (int fd, int recno, int len, short type){
 }
 void display(struct record * current){
   printf("id : %d\n", current->id);
-  printf("name : %s \n", current->name);
   printf("balance : %d \n", current->balance);
 }
 
