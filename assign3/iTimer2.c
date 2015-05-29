@@ -10,15 +10,25 @@ struct TCB{
   int thread_id;
   int time_left_to_invoke;
 };
+/*
+ *for passing arguments, make struct
+ */
 struct arg{
   int period;
   int thread_id;
 };
+
+
 pthread_t thread[10];
 pthread_cond_t cond_array[10] = {PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER};
+
+
 pthread_mutex_t API_mutex = PTHREAD_MUTEX_INITIALIZER;
 struct TCB TCB_array[10];
 int num_threads =5 ;
+struct arg parameter[10];
+
+
 void tt_thread_register(int period, int thread_id){
   pthread_mutex_lock(&API_mutex);
   TCB_array[thread_id].period = period;
@@ -50,7 +60,7 @@ void * Time_triggered_thread(void * parameter){
 }
 
 void SIGALRM_handler(int signo){
-  int i;
+  int i = 0;
   pthread_mutex_lock(&API_mutex);
   for (i= 0 ; i<num_threads ; i++){
     if((TCB_array[i].time_left_to_invoke -= 10)<=0){
@@ -65,18 +75,18 @@ void SIGALRM_handler(int signo){
 
 
 int main (int argc, char **argv){
+  num_threads = atoi(argv[1]);
   int rc[10], ret, i;
   struct itimerval delay;
-  struct arg parameter;
   signal(SIGALRM, SIGALRM_handler);
   delay.it_value.tv_sec = 0;
   delay.it_value.tv_usec = 10000;
   delay.it_interval.tv_sec = 0;
   delay.it_interval.tv_usec= 10000;
   for (i = 0 ; i<num_threads; i++){
-    parameter.thread_id = i;
-    parameter.period = (i+1) * 1000;
-    rc[i] = pthread_create(&thread[i], NULL, Time_triggered_thread, (void*) &parameter);
+    parameter[i].thread_id = i;
+    parameter[i].period = (i+1) * 1000;
+    rc[i] = pthread_create(&(thread[i]), NULL, Time_triggered_thread, (void*) &parameter[i]);
   }
   ret = setitimer(ITIMER_REAL, &delay, NULL);
   while(1){
